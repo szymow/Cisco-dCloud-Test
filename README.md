@@ -51,3 +51,26 @@ You can request support.
 To collect data to submit to VMware support, choose "Collect Support Data" from the Help menu.
 You can also run the "vm-support" script in the Workstation folder directly.
 We will respond on the basis of your support entitlement.
+
+apt-transport-https	install
+build-essential	install
+docker	install
+docker-compose	install
+docker.io	install
+dynamips	install
+gns3-gui	install
+gns3-iou	install
+gns3-server	install
+hunspell-pl	install
+hyphen-pl	install
+keepassx	install
+language-pack-gnome-pl	install
+language-pack-pl	install
+libreoffice-help-pl	install
+linux-generic	install
+mate-terminal	install
+mint-meta-codecs	install
+mythes-pl	install
+webtorrent-desktop	install
+wpolish	install
+xterm	install
