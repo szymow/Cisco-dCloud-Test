@@ -74,3 +74,12 @@ mythes-pl	install
 webtorrent-desktop	install
 wpolish	install
 xterm	install
+
+GNS3 Installation on Linux
+https://docs.gns3.com/1QXVIihk7dsOL7Xr7Bmz4zRzTsJ02wklfImGuHwTlaA4/index.html
+
+How to Install Docker on Linux Mint
+https://linuxhint.com/install_docker_linux_mint/
+
+How to configure any ASAv .qcow2 image for serial telnet access
+https://gns3.com/qa/how-to-configure-any-asav-qcow2-
