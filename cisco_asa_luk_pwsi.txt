@@ -14,10 +14,27 @@ interface GigabitEthernet1/1
  ip address dhcp
 !
 interface GigabitEthernet1/2
- shutdown
  no nameif
  no security-level
  no ip address
+!
+interface GigabitEthernet1/2.16
+ vlan 16
+ nameif inside-dyr
+ security-level 90
+ ip address 192.168.16.1 255.255.255.0
+!
+interface GigabitEthernet1/2.26
+ vlan 26
+ nameif inside-pra
+ security-level 80
+ ip address 192.168.26.1 255.255.255.0
+!
+interface GigabitEthernet1/2.105
+ vlan 105
+ nameif inside-adm
+ security-level 100
+ ip address 192.168.105.1 255.255.255.0
 !
 interface GigabitEthernet1/3
  description ServerDMZ
@@ -70,6 +87,9 @@ pager lines 24
 mtu outside 1500
 mtu dmz 1500
 mtu inside 1500
+mtu inside-adm 1500
+mtu inside-dyr 1500
+mtu inside-pra 1500
 icmp unreachable rate-limit 1 burst-size 1
 no asdm history enable
 arp timeout 14400
@@ -113,6 +133,12 @@ dynamic-access-policy-record DfltAccessPolicy
 username cisco password $sha512$5000$izbqTnq+n1vojvFFRIdIWQ==$eKzbp/T0WTGGIi0O4+WKZA== pbkdf2 privilege 15
 !
 !
+!
+policy-map global-policy
+ class class-default
+  inspect icmp
+!
+service-policy global-policy global
 prompt hostname context
 no call-home reporting anonymous
 call-home
@@ -126,5 +152,171 @@ call-home
   subscribe-to-alert-group inventory periodic monthly
   subscribe-to-alert-group configuration periodic monthly
   subscribe-to-alert-group telemetry periodic daily
-Cryptochecksum:3403d21c8b566df19b408ca2ff5b854e
+Cryptochecksum:4092b23f4c163d3c995c4c226e316d4d
+: end
+ciscoasa# wr
+Building configuration...
+Cryptochecksum: 4092b23f 4c163d3c 995c4c22 6e316d4d
+
+3891 bytes copied in 0.260 secs
+[OK]
+ciscoasa# sh run
+: Saved
+
+:
+: Serial Number: JAD22420AFH
+: Hardware:   ASA5506, 4096 MB RAM, CPU Atom C2000 series 1250 MHz, 1 CPU (4 cores)
+:
+ASA Version 9.8(2)
+!
+hostname ciscoasa
+enable password $sha512$5000$JLr3BGj0NRIcRqGQlc5iNw==$MR7bOeb4wMxs6gB2l+cGtA== pbkdf2
+names
+
+!
+interface GigabitEthernet1/1
+ nameif outside
+ security-level 0
+ ip address dhcp
+!
+interface GigabitEthernet1/2
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet1/2.16
+ vlan 16
+ nameif inside-dyr
+ security-level 90
+ ip address 192.168.16.1 255.255.255.0
+!
+interface GigabitEthernet1/2.26
+ vlan 26
+ nameif inside-pra
+ security-level 80
+ ip address 192.168.26.1 255.255.255.0
+!
+interface GigabitEthernet1/2.105
+ vlan 105
+ nameif inside-adm
+ security-level 100
+ ip address 192.168.105.1 255.255.255.0
+!
+interface GigabitEthernet1/3
+ description ServerDMZ
+ nameif dmz
+ security-level 50
+ ip address 172.22.0.1 255.255.0.0
+!
+interface GigabitEthernet1/4
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet1/5
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet1/6
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet1/7
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet1/8
+ nameif inside
+ security-level 100
+ ip address 192.168.0.1 255.255.255.0
+!
+interface Management1/1
+ management-only
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+ftp mode passive
+object network obj-my-range
+ range 10.24.204.115 10.24.204.120
+object network obj_172.22.0.0
+ subnet 172.22.0.0 255.255.0.0
+pager lines 24
+mtu outside 1500
+mtu dmz 1500
+mtu inside 1500
+mtu inside-adm 1500
+mtu inside-dyr 1500
+mtu inside-pra 1500
+icmp unreachable rate-limit 1 burst-size 1
+no asdm history enable
+arp timeout 14400
+no arp permit-nonconnected
+arp rate-limit 16384
+!
+object network obj_172.22.0.0
+ nat (dmz,outside) dynamic interface
+!
+nat (inside,outside) after-auto source dynamic any interface
+route outside 0.0.0.0 0.0.0.0 10.24.204.1 1
+timeout xlate 3:00:00
+timeout pat-xlate 0:00:30
+timeout conn 1:00:00 half-closed 0:10:00 udp 0:02:00 sctp 0:02:00 icmp 0:00:02
+timeout sunrpc 0:10:00 h323 0:05:00 h225 1:00:00 mgcp 0:05:00 mgcp-pat 0:05:00
+timeout sip 0:30:00 sip_media 0:02:00 sip-invite 0:03:00 sip-disconnect 0:02:00
+timeout sip-provisional-media 0:02:00 uauth 0:05:00 absolute
+timeout tcp-proxy-reassembly 0:01:00
+timeout floating-conn 0:00:00
+timeout conn-holddown 0:00:15
+timeout igp stale-route 0:01:10
+user-identity default-domain LOCAL
+aaa authentication login-history
+http server enable
+http 192.168.0.0 255.255.255.0 inside
+no snmp-server location
+no snmp-server contact
+service sw-reset-button
+crypto ipsec security-association pmtu-aging infinite
+crypto ca trustpool policy
+telnet timeout 5
+ssh stricthostkeycheck
+ssh timeout 5
+ssh key-exchange group dh-group1-sha1
+console timeout 0
+
+threat-detection basic-threat
+threat-detection statistics access-list
+no threat-detection statistics tcp-intercept
+dynamic-access-policy-record DfltAccessPolicy
+username cisco password $sha512$5000$izbqTnq+n1vojvFFRIdIWQ==$eKzbp/T0WTGGIi0O4+WKZA== pbkdf2 privilege 15
+!
+!
+!
+policy-map global-policy
+ class class-default
+  inspect icmp
+!
+service-policy global-policy global
+prompt hostname context
+no call-home reporting anonymous
+call-home
+ profile CiscoTAC-1
+  no active
+  destination address http https://tools.cisco.com/its/service/oddce/services/DDCEService
+  destination address email callhome@cisco.com
+  destination transport-method http
+  subscribe-to-alert-group diagnostic
+  subscribe-to-alert-group environment
+  subscribe-to-alert-group inventory periodic monthly
+  subscribe-to-alert-group configuration periodic monthly
+  subscribe-to-alert-group telemetry periodic daily
+Cryptochecksum:4092b23f4c163d3c995c4c226e316d4d
 : end
