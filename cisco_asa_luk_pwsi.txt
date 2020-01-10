@@ -77,7 +77,7 @@ no arp permit-nonconnected
 arp rate-limit 16384
 !
 object network obj_172.22.0.0
- nat (dmz,outside) dynamic obj-my-range
+ nat (dmz,outside) dynamic interface
 !
 nat (inside,outside) after-auto source dynamic any interface
 route outside 0.0.0.0 0.0.0.0 10.24.204.1 1
