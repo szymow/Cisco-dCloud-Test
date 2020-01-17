@@ -100,6 +100,10 @@ no arp permit-nonconnected
 arp rate-limit 8192
 !
 nat (inside,outside) after-auto source dynamic any interface
+nat (dmz,outside) after-auto source dynamic any interface
+nat (inside-dyr,outside) after-auto source dynamic any interface
+nat (inside-pra,outside) after-auto source dynamic any interface
+nat (inside-adm,outside) after-auto source dynamic any interface
 route outside 0.0.0.0 0.0.0.0 192.168.122.1 1
 timeout xlate 3:00:00
 timeout pat-xlate 0:00:30
